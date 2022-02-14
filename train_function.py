@@ -16,7 +16,7 @@ def train(vertices_num, model=None, optimizer=None):
 
     for epoch in range(0, int(len(graph)/10)):
         epoch_loss.fill_(0)
-        inputs = th.zeros(size=(10, 52))
+        inputs = th.zeros(size=(10, 52))  # 10 wierszy, 52 kolumny
         for i in range(0, 10):  # tworzenie macierzy 10x52
             batch = 10*epoch+i+1
             batch_connected = choice(tuple(graph[batch]))
