@@ -27,10 +27,6 @@ def train(vertices_num, model=None, optimizer=None):
                 while inputs[i, j].item() in graph[batch]:
                     inputs[i, j] = randint(1, vertices_num)
                     # czy niepolaczone moga sie powtarzac w wierszu? chyba tak
-        optimizer.zero_grad()
-        preds = model(inputs)
-        loss = model.loss(preds, size_average=True)
-        loss.backward()
 
     return inputs
 
