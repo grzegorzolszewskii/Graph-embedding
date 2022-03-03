@@ -13,4 +13,4 @@ class Euclidean:
         w.weight.data.uniform_(-scale, scale)
 
     def distance(self, u, v):
-        return ((u - v).pow(2)).pow(1/2).sum(dim=-1)
+        return ((u - v).pow(2)).sum(dim=-1)
