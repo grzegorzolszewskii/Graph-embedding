@@ -1,18 +1,11 @@
 from graph_import import load_graph
 import torch as th
-import numpy as np
-from random import choice, randint
-from model import Model
-from manifolds import Euclidean
-from torch.optim.optimizer import Optimizer
+from random import choice, randint, seed
 
-eucl = Euclidean()
-model_n520 = Model(eucl, 520, 2)
-model_n331 = Model(eucl, 331, 2)
-optimizer = th.optim.SGD(model_n331.parameters(), lr=0.1)
+seed(1)
 
 
-def train(vertices_num, model=None, optimizer=None):
+def train(vertices_num, model=None, optimizer=None, epochs=50):
     graph = load_graph(vertices_num)
     epoch_loss = th.Tensor(len(graph))  # robi losowy wektor dlugosci len(graph)
 
@@ -20,8 +13,8 @@ def train(vertices_num, model=None, optimizer=None):
     if len(graph) % 10 != 0:
         raise ValueError("Liczba wierzcholkow musi byc podzielna przez 10")
 
-    loss_list = [0 for i in range(0, 100)]
-    for epoch in range(0, 10):
+    loss_list = [0 for i in range(epochs)]
+    for epoch in range(epochs):
         for mini_batch_index in range(0, int(len(graph)/10)):
             epoch_loss.fill_(0)
             inputs = th.randint(vertices_num, (10, 52))  # 10 wierszy, 52 kolumny
@@ -37,20 +30,20 @@ def train(vertices_num, model=None, optimizer=None):
                         # czy niepolaczone moga sie powtarzac w wierszu? chyba tak
 
             optimizer.zero_grad()  # za kazdym razem chcemy nowy gradient
-            preds = model_n331(inputs)
-            print(preds)
+            preds = model(inputs)[0]
             target = th.zeros(10).long()
 
-            loss = model_n331.loss(preds, target=target, size_average=True)
-            print(loss.item())
+            # zapisuje wierzcholki i ich wspolrzedne zeby je narysowac
+            if epoch == epochs - 1 and mini_batch_index == int(len(graph)/10)-1:
+                wierzcholki = inputs
+                wspolrzedne = model(inputs)[1]
+                print("Jestem w zapisie", epoch, mini_batch_index)
+
+            loss = model.loss(preds, target=target, size_average=True)
+            #print(loss.item())
             loss_list[epoch] += loss.item()
 
             loss.backward()  # obliczenie pochodnych
             optimizer.step()  # dodaj pochodne do pozycji wierzch
 
-    return loss_list
-
-
-if __name__ == '__main__':
-    print(train(330, model_n331, optimizer=optimizer))
-
+    return loss_list, wierzcholki, wspolrzedne
