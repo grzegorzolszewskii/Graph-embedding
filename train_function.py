@@ -5,45 +5,42 @@ from random import choice, randint, seed
 seed(1)
 
 
-def train(vertices_num, model=None, optimizer=None, epochs=50):
-    graph = load_graph(vertices_num)
-    epoch_loss = th.Tensor(len(graph))  # robi losowy wektor dlugosci len(graph)
+def train(nodes_num, model, optimizer, epochs=50):
+    graph = load_graph(nodes_num)
 
-    # chcemy zeby ilosc wierzch. byla podzielna przez 10
     if len(graph) % 10 != 0:
         raise ValueError("Liczba wierzcholkow musi byc podzielna przez 10")
 
     loss_list = [0 for i in range(epochs)]
     for epoch in range(epochs):
-        for mini_batch_index in range(0, int(len(graph)/10)):
-            epoch_loss.fill_(0)
-            inputs = th.randint(vertices_num, (10, 52))  # 10 wierszy, 52 kolumny
-            for i in range(0, 10):  # tworzenie macierzy 10x52
-                batch = 10*mini_batch_index+i+1
-                batch_connected = choice(tuple(graph[batch]))
-                inputs[i, 0] = batch
-                inputs[i, 1] = batch_connected
+        for batch in range(0, int(len(graph) / 10)):
+
+            inputs = th.randint(nodes_num, (10, 52))
+            for i in range(0, 10):
+                node = 10 * batch + i + 1
+                node_connected = choice(tuple(graph[node]))
+                inputs[i, 0] = node
+                inputs[i, 1] = node_connected
                 for j in range(2, 52):  # jest 50 losowan wiec duza szansa ze wylosuje sie polaczony
-                    inputs[i, j] = randint(1, vertices_num)
-                    while inputs[i, j].item() in graph[batch]:
-                        inputs[i, j] = randint(1, vertices_num)
-                        # czy niepolaczone moga sie powtarzac w wierszu? chyba tak
+                    inputs[i, j] = randint(1, nodes_num)
+                    while inputs[i, j].item() in graph[node]:
+                        inputs[i, j] = randint(1, nodes_num)
 
             optimizer.zero_grad()  # za kazdym razem chcemy nowy gradient
             preds = model(inputs)[0]
             target = th.zeros(10).long()
 
-            # zapisuje wierzcholki i ich wspolrzedne zeby je narysowac
-            if epoch == epochs - 1 and mini_batch_index == int(len(graph)/10)-1:
-                wierzcholki = inputs
-                wspolrzedne = model(inputs)[1]
-                print("Jestem w zapisie", epoch, mini_batch_index)
+            # zapisuje wierzcholki i ich wspolrzedne w ostatniej epoce zeby je narysowac
+            if epoch == epochs - 1 and batch == int(len(graph) / 10) - 1:
+                nodes = inputs
+                coordinates = model(inputs)[1]
+                print("Jestem w zapisie, numery epoki i batcha to: ", epoch, batch)
 
             loss = model.loss(preds, target=target, size_average=True)
-            #print(loss.item())
+            # print(loss.item())
             loss_list[epoch] += loss.item()
 
             loss.backward()  # obliczenie pochodnych
             optimizer.step()  # dodaj pochodne do pozycji wierzch
 
-    return loss_list, wierzcholki, wspolrzedne
+    return loss_list, nodes, coordinates
