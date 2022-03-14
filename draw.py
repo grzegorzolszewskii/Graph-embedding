@@ -6,12 +6,13 @@ from train_function import train
 from graph_import import load_graph
 
 
-def connected_with_v(v, nodes, coordinates):  # argumentami sa macierze: 10x52, 10x52x2
+def draw(v, nodes, coordinates, nodes_num=330):  # argumentami sa macierze: 10x52, 10x52x2
     v_connected = []
     nodes_set = {nodes[i, j].item() for i in range(10) for j in range(52)}
+    graph = load_graph(nodes_num)
 
     if v not in nodes_set:
-        raise ValueError("Wierzcholek nie znalazl sie w ostatniej epoce")
+        raise ValueError("Wierzcholek nie znalazl sie w ostatnim batchu")
 
     for i in graph[v]:
         if i in nodes_set:
@@ -30,28 +31,27 @@ def connected_with_v(v, nodes, coordinates):  # argumentami sa macierze: 10x52, 
                 if nodes[i, j].item() == v:
                     v_coords = coordinates[i, j, 0].item(), coordinates[i, j, 1].item()
 
-    return v_connected, X, Y, v_coords
+    X_all = [coordinates[i, j, 0].item() for i in range(10) for j in range(52)]
+    Y_all = [coordinates[i, j, 1].item() for i in range(10) for j in range(52)]
+
+    # print(v_connected)
+    # print(sorted(graph[v]))
+    print(loss_list)
+
+    plt.scatter(X_all, Y_all, s=0.7)
+    plt.scatter(X, Y, c='green')
+    plt.scatter(v_coords[0], v_coords[1], c='red')
+    plt.legend(["niepolaczone z czerwonym", "polaczone z czerwonym"])
+    plt.show()
 
 
-nodes_num = 330
-eucl = Euclidean()
-model_n331 = Model(eucl, 331, 2)
-optimizer = th.optim.SGD(model_n331.parameters(), lr=0.1)
-graph = load_graph(330)
+if __name__ == '__main__':
+    nodes_num = 330
+    eucl = Euclidean()
+    model = Model(eucl, nodes_num+1, 2)
+    optimizer = th.optim.SGD(model.parameters(), lr=0.1)
+    graph = load_graph(nodes_num)
 
-loss_list, nodes, coordinates = train(nodes_num, model_n331, optimizer, epochs=500)
-X_all = [coordinates[i, j, 0].item() for i in range(10) for j in range(52)]
-Y_all = [coordinates[i, j, 1].item() for i in range(10) for j in range(52)]
-
-v_connected, X, Y, v_coords = connected_with_v(20, nodes, coordinates)
-
-'''print(connected_with_v(1, nodes, coordinates)[0])
-print(sorted(graph[1]))
-# sprawdzam poprawnosc funkcji connected_with_v'''
-
-
-plt.scatter(X_all, Y_all, s=0.7)
-plt.scatter(X, Y, c='green')
-plt.scatter(v_coords[0], v_coords[1], c='red')
-plt.legend(["niepolaczone z czerwonym", "polaczone z czerwonym"])
-plt.show()
+    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=300)
+    draw(2, nodes, coordinates)
+    # zmniejszenie learning rate'a nic nie daje - loss function przestaje sie zmieniac, min to okolo 65

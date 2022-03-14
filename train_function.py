@@ -30,17 +30,20 @@ def train(nodes_num, model, optimizer, epochs=50):
             preds = model(inputs)[0]
             target = th.zeros(10).long()
 
-            # zapisuje wierzcholki i ich wspolrzedne w ostatniej epoce zeby je narysowac
-            if epoch == epochs - 1 and batch == int(len(graph) / 10) - 1:
-                nodes = inputs
-                coordinates = model(inputs)[1]
-                print("Jestem w zapisie, numery epoki i batcha to: ", epoch, batch)
-
             loss = model.loss(preds, target=target, size_average=True)
             # print(loss.item())
             loss_list[epoch] += loss.item()
 
             loss.backward()  # obliczenie pochodnych
             optimizer.step()  # dodaj pochodne do pozycji wierzch
+
+            # wierzcholki i ich wspolrzedne z ostatniej epoku jezeli do niej dotrzemy - przyda sie do narysowania
+            if epoch == epochs - 1 and batch == int(len(graph) / 10) - 1:
+                nodes = inputs
+                coordinates = model(inputs)[1]
+                print("Jestem w zapisie, numery epoki i batcha to: ", epoch, batch)
+
+        if loss_list[epoch] < 65:
+            return loss_list, inputs, model(inputs)[1]
 
     return loss_list, nodes, coordinates
