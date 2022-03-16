@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from model import Model
-from manifolds import Euclidean
+from manifolds import Manifold
 import torch as th
 from train_function import train
 from graph_import import load_graph
@@ -47,11 +47,11 @@ def draw(v, nodes, coordinates, nodes_num=330):  # argumentami sa macierze: 10x5
 
 if __name__ == '__main__':
     nodes_num = 330
-    eucl = Euclidean()
+    eucl = Manifold('euclidean')
     model = Model(eucl, nodes_num+1, 2)
     optimizer = th.optim.SGD(model.parameters(), lr=0.1)
     graph = load_graph(nodes_num)
 
-    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=300)
-    draw(2, nodes, coordinates)
+    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=350)
+    draw(250, nodes, coordinates)
     # zmniejszenie learning rate'a nic nie daje - loss function przestaje sie zmieniac, min to okolo 65

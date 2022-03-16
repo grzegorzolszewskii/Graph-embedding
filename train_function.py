@@ -43,7 +43,7 @@ def train(nodes_num, model, optimizer, epochs=50):
                 coordinates = model(inputs)[1]
                 print("Jestem w zapisie, numery epoki i batcha to: ", epoch, batch)
 
-        if loss_list[epoch] < 65:
+        if loss_list[epoch] < 66:
             return loss_list, inputs, model(inputs)[1]
 
     return loss_list, nodes, coordinates
