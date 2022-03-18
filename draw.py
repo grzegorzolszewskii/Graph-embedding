@@ -36,7 +36,7 @@ def draw(v, nodes, coordinates, nodes_num=330):  # argumentami sa macierze: 10x5
 
     # print(v_connected)
     # print(sorted(graph[v]))
-    print(loss_list)
+    # print(loss_list)
 
     plt.scatter(X_all, Y_all, s=0.7)
     plt.scatter(X, Y, c='green')
@@ -49,9 +49,9 @@ if __name__ == '__main__':
     nodes_num = 330
     eucl = Manifold('euclidean')
     model = Model(eucl, nodes_num+1, 2)
-    optimizer = th.optim.SGD(model.parameters(), lr=0.1)
+    optimizer = th.optim.SGD(model.parameters(), lr=0.5)
     graph = load_graph(nodes_num)
-
-    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=350)
-    draw(250, nodes, coordinates)
-    # zmniejszenie learning rate'a nic nie daje - loss function przestaje sie zmieniac, min to okolo 65
+    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=300)
+    draw(60, nodes, coordinates)
+    # zmniejszenie learning rate'a nic nie daje - loss function przestaje sie zmieniac, min to okolo 65 (lr=0.1)
+    # KLUCZOWE zwiekszenie lr do 0.5 daje najlepsze wartosci loss_fun bliskie 50 (300 epok wystarczy)

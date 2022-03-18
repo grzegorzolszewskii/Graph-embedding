@@ -37,13 +37,9 @@ def train(nodes_num, model, optimizer, epochs=50):
             loss.backward()  # obliczenie pochodnych
             optimizer.step()  # dodaj pochodne do pozycji wierzch
 
-            # wierzcholki i ich wspolrzedne z ostatniej epoku jezeli do niej dotrzemy - przyda sie do narysowania
-            if epoch == epochs - 1 and batch == int(len(graph) / 10) - 1:
-                nodes = inputs
-                coordinates = model(inputs)[1]
-                print("Jestem w zapisie, numery epoki i batcha to: ", epoch, batch)
-
-        if loss_list[epoch] < 66:
-            return loss_list, inputs, model(inputs)[1]
+        if epoch > epochs/2:
+            if loss_list[epoch] < min(loss_list[:epoch]):
+                print("epoka nr: ", epoch, "wartosc loss fun: ", loss_list[epoch])
+                nodes, coordinates = inputs, model(inputs)[1]
 
     return loss_list, nodes, coordinates
