@@ -3,13 +3,13 @@ from model import Model
 from manifolds import Manifold
 import torch as th
 from train_function import train
-from graph_import import load_graph
+from graph_import_start1 import load_graph
+from graph_import_start0 import load_graph2
 
 
-def draw(v, nodes, coordinates, nodes_num=330):  # argumentami sa macierze: 10x52, 10x52x2
+def draw(graph, v, nodes, coordinates):  # argumentami sa macierze: 10x52, 10x52x2
     v_connected = []
     nodes_set = {nodes[i, j].item() for i in range(10) for j in range(52)}
-    graph = load_graph(nodes_num)
 
     if v not in nodes_set:
         raise ValueError("Wierzcholek nie znalazl sie w ostatnim batchu")
@@ -46,12 +46,16 @@ def draw(v, nodes, coordinates, nodes_num=330):  # argumentami sa macierze: 10x5
 
 
 if __name__ == '__main__':
-    nodes_num = 330
+    graph = load_graph2(20, data='tree_graph')
+    nodes_num = len(graph)
+
     eucl = Manifold('euclidean')
-    model = Model(eucl, nodes_num+1, 2)
-    optimizer = th.optim.SGD(model.parameters(), lr=0.5)
-    graph = load_graph(nodes_num)
-    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=300)
-    draw(60, nodes, coordinates)
+    model = Model(eucl, nodes_num, 2)
+    optimizer = th.optim.SGD(model.parameters(), lr=0.1)
+
+    loss_list, nodes, coordinates, weights = train(graph, model, optimizer, epochs=300)
+    draw(graph, 0, nodes, coordinates)
+
     # zmniejszenie learning rate'a nic nie daje - loss function przestaje sie zmieniac, min to okolo 65 (lr=0.1)
     # KLUCZOWE zwiekszenie lr do 0.5 daje najlepsze wartosci loss_fun bliskie 50 (300 epok wystarczy)
+
