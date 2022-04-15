@@ -1,2 +1,0 @@
-# Licencjat
-praca licencjacka
