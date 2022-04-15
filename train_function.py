@@ -3,7 +3,7 @@ import torch as th
 import random as rand
 
 
-def train(graph, model, optimizer, epochs=50):
+def train(graph, model, optimizer, epochs=50, max_loss=3.5):
     nodes_num = len(graph)
 
     loss_list = [0 for i in range(epochs)]
@@ -35,6 +35,8 @@ def train(graph, model, optimizer, epochs=50):
         if epoch > epochs/2:
             if loss_list[epoch] < min(loss_list[:epoch]):
                 print("epoka nr: ", epoch, "wartosc loss fun: ", loss_list[epoch])
-                nodes, coordinates = inputs, model(inputs)[1]
+                if loss_list[epoch] <= max_loss:
+                    print("Koniec zanurzania dla loss rownego: ", loss_list[epoch])
+                    return loss_list, model.model.weight
 
-    return loss_list, nodes, coordinates, model.model.weight
+    return loss_list, model.model.weight

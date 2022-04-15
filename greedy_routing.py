@@ -1,4 +1,4 @@
-from graph_import import load_graph
+from graph_import_start1 import load_graph
 from model import Model
 from manifolds import Manifold
 import torch as th
@@ -52,6 +52,5 @@ if __name__ == "__main__":
     eucl = Manifold('euclidean')
     model = Model(eucl, nodes_num + 1, 2)
     optimizer = th.optim.SGD(model.parameters(), lr=0.5)
-    graph = load_graph(nodes_num)
-    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=300)
-    print(greedy_routing(nodes, coordinates, 150, 230))
+    loss_list, nodes, coordinates = train(nodes_num, model, optimizer, epochs=100)
+    print(greedy_routing(nodes, coordinates, 1, 5))

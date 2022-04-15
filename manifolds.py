@@ -22,4 +22,4 @@ class Manifold:
             y1 = u[:, :, 1]
             x2 = v[:, :, 0]
             y2 = v[:, :, 1]
-            return arccosh(cosh(y1)*cosh(x1-x2)*cosh(y2) - sinh(y1)*sinh(y2))
+            return (cosh(y1)*cosh(x1-x2)*cosh(y2) - sinh(y1)*sinh(y2))

@@ -7,18 +7,24 @@ from graph_import_start0 import load_graph2
 
 
 def draw2(graph, v, weights):
-    v_connected = graph[v]
     v_coords = (weights[v][0].item(), weights[v][1].item())
     X_connected = []
     Y_connected = []
-    for w in v_connected:
+    for w in graph[v]:
         X_connected.append(weights[w][0].item())
         Y_connected.append(weights[w][1].item())
 
     X_all = [weights[i][0].item() for i in range(0, len(graph))]
     Y_all = [weights[i][1].item() for i in range(0, len(graph))]
 
-    plt.scatter(X_all, Y_all, s=1.2, c='black')
+    for i in range(len(graph)):
+        for j in range(len(graph)):
+            if i in graph[j] or j in graph[i]:
+                X_c = (weights[i][0].item(), weights[j][0].item())
+                Y_c = (weights[i][1].item(), weights[j][1].item())
+                plt.plot(X_c, Y_c, c='black', linewidth=0.3)
+
+    plt.scatter(X_all, Y_all, c='blue')
     plt.scatter(X_connected, Y_connected, c='green')
     plt.scatter(v_coords[0], v_coords[1], c='red')
     plt.legend(["niepolaczone z czerwonym", "polaczone z czerwonym"])
