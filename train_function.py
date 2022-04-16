@@ -1,6 +1,9 @@
 from graph_import_start1 import load_graph
 import torch as th
 import random as rand
+from graph_import_start0 import load_graph2
+from manifolds import Manifold
+from model import Model
 
 
 def train(graph, model, optimizer, epochs=50, max_loss=3.5):
@@ -40,3 +43,24 @@ def train(graph, model, optimizer, epochs=50, max_loss=3.5):
                     return loss_list, model.model.weight
 
     return loss_list, model.model.weight
+
+
+if __name__ == '__main__':
+    # wykonujemy zanurzenie
+    nodes_num = 46
+    graph = load_graph2(nodes_num, data='tree_graph')
+    eucl = Manifold('euclidean')
+    model = Model(eucl, nodes_num, 2)
+    optimizer = th.optim.SGD(model.parameters(), lr=0.5)
+    loss_list, weights = train(graph, model, optimizer, epochs=300, max_loss=5)
+
+    # dostajemy loss<5 kiedy odcinki miedzy punktami sie nie przecinaja - najlepszy graf
+    # jezeli najmniejszy loss<5 to zapisuje nowe wspolrzedne do pliku tekstowego
+    loss_list_changed = filter(lambda x: x > 0, loss_list)
+    '''if min(loss_list_changed) < 5:
+        with open('good_embedding', 'w') as file:
+            for i in range(len(graph)):
+                file.write(str(weights[i][0].item()))
+                file.write(', ')
+                file.write(str(weights[i][1].item()))
+                file.write('\n')'''

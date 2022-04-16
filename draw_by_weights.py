@@ -4,24 +4,25 @@ from manifolds import Manifold
 import torch as th
 from train_function import train
 from graph_import_start0 import load_graph2
+import pandas as pd
 
 
-def draw2(graph, v, weights):
-    v_coords = (weights[v][0].item(), weights[v][1].item())
+def draw2(graph, v, coordinates):
+    v_coords = (coordinates[0][v].item(), coordinates[1][v].item())
     X_connected = []
     Y_connected = []
     for w in graph[v]:
-        X_connected.append(weights[w][0].item())
-        Y_connected.append(weights[w][1].item())
+        X_connected.append(coordinates[0][w])
+        Y_connected.append(coordinates[1][w])
 
-    X_all = [weights[i][0].item() for i in range(0, len(graph))]
-    Y_all = [weights[i][1].item() for i in range(0, len(graph))]
+    X_all = [coordinates[0][i] for i in range(0, len(graph))]
+    Y_all = [coordinates[1][i] for i in range(0, len(graph))]
 
     for i in range(len(graph)):
         for j in range(len(graph)):
             if i in graph[j] or j in graph[i]:
-                X_c = (weights[i][0].item(), weights[j][0].item())
-                Y_c = (weights[i][1].item(), weights[j][1].item())
+                X_c = (coordinates[0][i].item(), coordinates[0][j].item())
+                Y_c = (coordinates[1][i].item(), coordinates[1][j].item())
                 plt.plot(X_c, Y_c, c='black', linewidth=0.3)
 
     plt.scatter(X_all, Y_all, c='blue')
@@ -33,12 +34,9 @@ def draw2(graph, v, weights):
 
 
 if __name__ == '__main__':
-    graph = load_graph2(20, data='tree_graph')
-    nodes_num = len(graph)
+    nodes_num = 46
+    graph = load_graph2(nodes_num, data='tree_graph')
+    coordinates = pd.read_csv('good_embedding', header=None)
+    # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
-    eucl = Manifold('euclidean')
-    model = Model(eucl, nodes_num, 2)
-    optimizer = th.optim.SGD(model.parameters(), lr=0.1)
-
-    loss_list, weights = train(graph, model, optimizer, epochs=400, max_loss=3.75)
-    draw2(graph, 0, weights)
+    draw2(graph, 0, coordinates)
