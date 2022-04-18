@@ -8,7 +8,7 @@ import pandas as pd
 
 
 def draw2(graph, v, coordinates):
-    v_coords = (coordinates[0][v].item(), coordinates[1][v].item())
+    v_coords = (coordinates[0][v], coordinates[1][v])
     X_connected = []
     Y_connected = []
     for w in graph[v]:
@@ -39,4 +39,4 @@ if __name__ == '__main__':
     coordinates = pd.read_csv('good_embedding', header=None)
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
-    draw2(graph, 0, coordinates)
+    draw2(graph, 43, coordinates)
