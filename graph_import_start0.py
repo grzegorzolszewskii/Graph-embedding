@@ -10,7 +10,7 @@ def load_graph2(vertices_num, data):
         if edges_pd[0][i] < vertices_num and edges_pd[1][i] < vertices_num:
             edges_set[edges_pd[0][i]].add(edges_pd[1][i])
             edges_set[edges_pd[1][i]].add(edges_pd[0][i])
-    print(edges_set)
+    # print(edges_set)
 
     # edges_set[2].add(3)
     # sprawdzam poprawnosc - uzywajac powyzszej linijki tworze blad w danych

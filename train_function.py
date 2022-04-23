@@ -1,4 +1,3 @@
-from graph_import_start1 import load_graph
 import torch as th
 import random as rand
 from graph_import_start0 import load_graph2
@@ -8,8 +7,8 @@ from model import Model
 
 def train(graph, model, optimizer, epochs=50, max_loss=3.5):
     nodes_num = len(graph)
-
     loss_list = [0 for i in range(epochs)]
+
     for epoch in range(epochs):
         for batch in range(0, int(len(graph) / 10)):
 
@@ -37,7 +36,7 @@ def train(graph, model, optimizer, epochs=50, max_loss=3.5):
 
         if epoch > epochs/2:
             if loss_list[epoch] < min(loss_list[:epoch]):
-                print("epoka nr: ", epoch, "wartosc loss fun: ", loss_list[epoch])
+                # print("epoka nr: ", epoch, "wartosc loss fun: ", loss_list[epoch])
                 if loss_list[epoch] <= max_loss:
                     print("Koniec zanurzania dla loss rownego: ", loss_list[epoch])
                     return loss_list, model.model.weight
@@ -49,18 +48,26 @@ if __name__ == '__main__':
     # wykonujemy zanurzenie
     nodes_num = 46
     graph = load_graph2(nodes_num, data='tree_graph')
-    eucl = Manifold('euclidean')
-    model = Model(eucl, nodes_num, 2)
-    optimizer = th.optim.SGD(model.parameters(), lr=0.5)
-    loss_list, weights = train(graph, model, optimizer, epochs=300, max_loss=5)
+
+    eucl = Manifold('euclidean')    # linijki 52-55 ustalam parametry zanurzania
+    dim = 2
+    lr = 0.5
+    epochs = 300
+
+    model = Model(eucl, nodes_num, dim)
+    optimizer = th.optim.SGD(model.parameters(), lr=lr)
+    loss_list, weights = train(graph, model, optimizer, epochs=epochs, max_loss=5)
 
     # dostajemy loss<5 kiedy odcinki miedzy punktami sie nie przecinaja - najlepszy graf
     # jezeli najmniejszy loss<5 to zapisuje nowe wspolrzedne do pliku tekstowego
     loss_list_changed = filter(lambda x: x > 0, loss_list)
-    '''if min(loss_list_changed) < 5:
-        with open('good_embedding', 'w') as file:
+    print(loss_list_changed)
+    print(weights)
+
+    if min(loss_list_changed) < 4.4:
+        with open('good_embedding_dim2', 'w') as file:
             for i in range(len(graph)):
                 file.write(str(weights[i][0].item()))
                 file.write(', ')
                 file.write(str(weights[i][1].item()))
-                file.write('\n')'''
+                file.write('\n')

@@ -36,7 +36,7 @@ def draw2(graph, v, coordinates):
 if __name__ == '__main__':
     nodes_num = 46
     graph = load_graph2(nodes_num, data='tree_graph')
-    coordinates = pd.read_csv('good_embedding', header=None)
+    coordinates = pd.read_csv('good_embedding_dim2', header=None)
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
     draw2(graph, 43, coordinates)
