@@ -1,6 +1,6 @@
 import torch as th
 import random as rand
-from graph_import_start0 import load_graph2
+from graph_import import load_graph2
 from manifolds import Manifold
 from model import Model
 from train_function import train
@@ -29,18 +29,19 @@ if __name__ == '__main__':
     dims = [2, 3, 4, 5]
     lrs = [0.1, 0.3, 0.5, 0.7, 1]
     epochs = [300]
-    loops = 2
+    loops = 1
 
     loss, params = find_best_emb(graph, manifolds, dims, lrs, epochs, loops)
     dim = params[1]
     coordinates = params[5]
 
-    if loss < 3.55:
+    if loss < 3.4:
         with open('best_embedding', 'w') as file:
             for i in range(len(graph)):
                 for j in range(dim):
                     file.write(str(coordinates[i][j].item()))
-                    file.write(', ')
+                    if j != dim-1:
+                        file.write(', ')
                 file.write('\n')
             file.write('\n')
             file.write(str((params[0].manifold_type, params[1], params[2], params[3], loss)))

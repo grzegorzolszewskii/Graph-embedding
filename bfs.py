@@ -1,5 +1,5 @@
 # bfs ze strony https://onestepcode.com/graph-shortest-path-python/?utm_source=rss&utm_medium=rss&utm_campaign=graph-shortest-path-python
-from graph_import_start0 import load_graph2
+from graph_import import load_graph2
 
 
 def bfs(graph, node1, node2):
@@ -43,4 +43,4 @@ def longest_paths(graph, distance):
 
 if __name__ == "__main__":
     graph = load_graph2(46, 'tree_graph')
-    print(bfs(graph, 20, 40))  # 11 wierzcholkow od 198 do 241
+    print(bfs(graph, 20, 40))

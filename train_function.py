@@ -1,6 +1,6 @@
 import torch as th
 import random as rand
-from graph_import_start0 import load_graph2
+from graph_import import load_graph2
 from manifolds import Manifold
 from model import Model
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     print(loss_list_changed)
     print(weights)
 
-    if min(loss_list_changed) < 4.4:
+    if min(loss_list_changed) < 4.4 and dim == 2:
         with open('good_embedding_dim2', 'w') as file:
             for i in range(len(graph)):
                 file.write(str(weights[i][0].item()))

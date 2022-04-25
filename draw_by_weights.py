@@ -3,7 +3,7 @@ from model import Model
 from manifolds import Manifold
 import torch as th
 from train_function import train
-from graph_import_start0 import load_graph2
+from graph_import import load_graph2
 import pandas as pd
 
 

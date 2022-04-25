@@ -1,6 +1,7 @@
 import torch as th
 from math import pi
 import pandas as pd
+import csv
 
 
 def vectors():
@@ -54,6 +55,8 @@ dist = distance(moredim_vectors()[1], moredim_vectors()[2])
 # print("dist: ", dist)
 # print("dist sum dim -1: ", dist.sum(dim=-1))
 
-df = pd.read_csv('good_embedding', header=None)
-print(df)
+df = pd.read_csv('best_embedding', header=None)
+for i in range(4):
+    print(df[i][0])
+print({i: [0 for j in range(4+1)] for i in [1,2,3,4,5]})
 
