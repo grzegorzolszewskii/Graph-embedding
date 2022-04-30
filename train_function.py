@@ -24,7 +24,7 @@ def train(graph, model, optimizer, epochs=50, max_loss=3.5):
                         inputs[i, j] = rand.randint(0, nodes_num-1)
 
             optimizer.zero_grad()  # za kazdym razem chcemy nowy gradient
-            preds = model(inputs)[0]
+            preds = model(inputs)       # tu bylo model(inputs)[0]
             target = th.zeros(10).long()
 
             loss = model.loss(preds, target=target, size_average=True)
@@ -60,8 +60,8 @@ if __name__ == '__main__':
 
     # dostajemy loss<5 kiedy odcinki miedzy punktami sie nie przecinaja - najlepszy graf
     # jezeli najmniejszy loss<5 to zapisuje nowe wspolrzedne do pliku tekstowego
-    loss_list_changed = filter(lambda x: x > 0, loss_list)
-    print(loss_list_changed)
+    loss_list_changed = [item for item in loss_list if item > 0]
+    print(min(loss_list_changed))
     print(weights)
 
     if min(loss_list_changed) < 4.4 and dim == 2:
