@@ -2,12 +2,12 @@ import pandas as pd
 import random
 
 
-def load_graph2(vertices_num, data):
-    edges_set = {i: set() for i in range(vertices_num)}
+def load_graph2(nodes_num, data):
+    edges_set = {i: set() for i in range(nodes_num)}
     edges_pd = pd.read_csv(data, header=None, delimiter=" ")
 
     for i in range(len(edges_pd)):
-        if edges_pd[0][i] < vertices_num and edges_pd[1][i] < vertices_num:
+        if edges_pd[0][i] < nodes_num and edges_pd[1][i] < nodes_num:
             edges_set[edges_pd[0][i]].add(edges_pd[1][i])
             edges_set[edges_pd[1][i]].add(edges_pd[0][i])
     # print(edges_set)

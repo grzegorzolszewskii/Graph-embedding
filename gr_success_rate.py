@@ -8,12 +8,13 @@ def gr_success_rate(graph, coordinates):
     success = 0
     for i in range(len(graph)):
         for j in range(len(graph)):
-            if bfs(graph, i, j) == greedy_routing(graph, coordinates, i, j):
-                success += 1
-            else:
-                print(bfs(graph, i, j), greedy_routing(graph, coordinates, i, j))
+            if i != j:
+                if bfs(graph, i, j) == greedy_routing(graph, coordinates, i, j):
+                    success += 1
+                else:
+                    print(bfs(graph, i, j), greedy_routing(graph, coordinates, i, j))
 
-    return success/(len(graph)**2)
+    return success/(len(graph)**2 - len(graph))
 
 
 if __name__ == '__main__':

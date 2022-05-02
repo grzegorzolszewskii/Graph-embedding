@@ -19,10 +19,14 @@ def dist(p1, p2):
 
 # szukam drogi z a do b
 def greedy_routing(graph, coordinates, a, b):
+    if a == b:
+        return [a]
+
     dim = coordinates.shape[1]
     a_coords = [float(coordinates[i][a]) for i in range(dim)]
     b_coords = [float(coordinates[i][b]) for i in range(dim)]
 
+    prev = None
     v = a
     path = [(v, dist(a_coords, b_coords))]
 
@@ -41,6 +45,12 @@ def greedy_routing(graph, coordinates, a, b):
                 return [path[i][0] for i in range(len(path))]
 
         min_dist = 100
+        if prev == v:   # jezeli sie blokuje to zwracam path
+            return [path[i][0] for i in range(len(path)-1)]
+
+        if prev is not None:
+            v_connected_coords[prev][dim] = min_dist  # ustalamy poprzednikowi duzy dystans, aby gr nie zawracal
+
         for w in v_connected_coords:  # szuakmy ktory w polaczony z v ma najmniejsza odleglosc do docelowego
             if min_dist > v_connected_coords[w][dim] > 0:
                 min_dist = v_connected_coords[w][dim]
@@ -49,8 +59,9 @@ def greedy_routing(graph, coordinates, a, b):
         path.append((min_v, min_dist))
 
         # przejscie - zmieniam v na kolejny wierzcholek
-        print(v_connected_coords)
-        print("ide z", v, "do ", min_v)
+        # print(v_connected_coords)
+        # print("ide z", v, "do ", min_v)
+        prev = v
         v = min_v
 
 
@@ -59,7 +70,7 @@ if __name__ == "__main__":
     graph = load_graph2(nodes_num, data='tree_graph')
     coordinates = pd.read_csv('best_embedding', header=None)
 
-    print(bfs(graph, 20, 40))
-    print(greedy_routing(graph, coordinates, 20, 40))
-    assert(bfs(graph, 20, 40) == greedy_routing(graph, coordinates, 20, 40))
+    print(bfs(graph, 43, 11))
+    print(greedy_routing(graph, coordinates, 43, 11))
+
     # draw2(graph, 0, coordinates)
