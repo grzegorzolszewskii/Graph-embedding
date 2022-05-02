@@ -11,6 +11,7 @@ class Model(Module):
         self.n = n
         self.dim = dim
         self.model = Embedding(n, dim, sparse=sparse)
+        # self.manifold.init_weights(self.model)
 
     def forward(self, inputs):  # z inputs zrobi preds - z macierzy 10x52 zrobi sie 10x52xdim
         e = self.model(inputs)  # macierz 10x52xdim, e to preds z pliku embed - tu wykonuje sie zanurzenie
@@ -21,3 +22,12 @@ class Model(Module):
 
     def loss(self, inp, target, **kwargs):
         return fun.cross_entropy(inp.neg(), target)
+
+    def optim_params(self):
+        return [{
+            'params': self.model.parameters(),
+            'rgrad': self.manifold.rgrad,
+            'expm': self.manifold.expm,
+            'logm': self.manifold.logm,
+            'ptransp': self.manifold.ptransp,
+        }]

@@ -3,6 +3,7 @@ import random as rand
 from graph_import import load_graph2
 from manifolds import Manifold
 from model import Model
+from rsgd import RiemannianSGD
 
 
 def train(graph, model, optimizer, epochs=50, max_loss=3.5):
@@ -27,6 +28,11 @@ def train(graph, model, optimizer, epochs=50, max_loss=3.5):
             preds = model(inputs)       # tu bylo model(inputs)[0]
             target = th.zeros(10).long()
 
+            if epoch == 0 and batch == 0:   # sprawdzam jak zmienia sie zanurzenie
+                print(inputs)
+                print(preds)
+                print(model.model.weight)
+
             loss = model.loss(preds, target=target, size_average=True)
             # print(loss.item())
             loss_list[epoch] += loss.item()
@@ -49,22 +55,24 @@ if __name__ == '__main__':
     nodes_num = 46
     graph = load_graph2(nodes_num, data='tree_graph')
 
-    eucl = Manifold('euclidean')    # linijki 52-55 ustalam parametry zanurzania
     dim = 2
     lr = 0.5
-    epochs = 300
+    epochs = 12
+    manif = Manifold('lorentz')
+    model = Model(manif, nodes_num, dim)
+    optimizer = RiemannianSGD(model.optim_params(), lr=lr)  # dla lorentza
+    # optimizer = th.optim.SGD(model.parameters(), lr=lr)  # dla prz euklidesowej
 
-    model = Model(eucl, nodes_num, dim)
-    optimizer = th.optim.SGD(model.parameters(), lr=lr)
     loss_list, weights = train(graph, model, optimizer, epochs=epochs, max_loss=5)
 
     # dostajemy loss<5 kiedy odcinki miedzy punktami sie nie przecinaja - najlepszy graf
     # jezeli najmniejszy loss<5 to zapisuje nowe wspolrzedne do pliku tekstowego
     loss_list_changed = [item for item in loss_list if item > 0]
     print(min(loss_list_changed))
+    print(loss_list)
     print(weights)
 
-    if min(loss_list_changed) < 4.4 and dim == 2:
+    if min(loss_list_changed) < 3.4 and dim == 2:
         with open('good_embedding_dim2', 'w') as file:
             for i in range(len(graph)):
                 file.write(str(weights[i][0].item()))
