@@ -39,8 +39,3 @@ def longest_paths(graph, distance):
             if len(bfs(graph, i, j)) >= distance:
                 pairs.append((i, j))
     return pairs
-
-
-if __name__ == "__main__":
-    graph = load_graph2(46, 'tree_graph')
-    print(bfs(graph, 20, 40))
