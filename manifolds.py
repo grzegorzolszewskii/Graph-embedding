@@ -16,8 +16,9 @@ class Manifold:
         if K is not None:
             self.inner_radius = 2 * self.K / (1 + np.sqrt(1 + 4 * self.K * self.K))
 
-    def init_weights(self, w, scale=1e-4):
-        w.weight.data.uniform_(-scale, scale)
+    def init_weights(self, model, scale=1e-4):
+        model.weight.data.uniform_(-scale, scale)
+        model.weight.data.copy_(self.normalize(model.weight.data))
 
     def distance(self, u, v):
         if self.manifold_type == 'euclidean':
@@ -66,7 +67,7 @@ class Manifold:
         u.addcmul_(self.ldot(x, u, keepdim=True).expand_as(x), x)
         return d_p
 
-    def expm(self, p, d_p, lr=None, out=None, normalize=False):
+    def expm(self, p, d_p, lr=None, out=None, normalize=True):
         """Exponential map for hyperboloid"""
         if out is None:
             out = p
@@ -113,7 +114,6 @@ class Manifold:
             th.clamp(th.sqrt(xy * xy - 1), min=self._eps)
         ) * th.addcmul(y, xy, x)
         return self.normalize_tan(x, v)
-
 
     def ptransp(self, x, y, v, ix=None, out=None):
         """Parallel transport for hyperboloid"""

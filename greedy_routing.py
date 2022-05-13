@@ -6,9 +6,11 @@ from train_function import train
 from draw_by_weights import draw2
 import pandas as pd
 from bfs import bfs
+from acosh import acosh
+from manifolds import LorentzDot
 
 
-def dist(p1, p2):
+def eukl_dist(p1, p2):
     if len(p1) != len(p2):
         raise ValueError("Wektory maja rozne wymiary!")
     d = 0
@@ -17,8 +19,16 @@ def dist(p1, p2):
     return d
 
 
+def hyp_dist(p1, p2):
+    if len(p1) != len(p2):
+        raise ValueError("Wektory maja rozne wymiary!")
+    d = -LorentzDot.apply(p1, p2)
+    d.data.clamp_(min=1)
+    return acosh(d, 1e-5)
+
+
 # szukam drogi z a do b
-def greedy_routing(graph, coordinates, a, b):
+def greedy_routing(graph, coordinates, a, b, dist):
     if a == b:
         return [a]
 
@@ -68,9 +78,11 @@ def greedy_routing(graph, coordinates, a, b):
 if __name__ == "__main__":
     nodes_num = 46
     graph = load_graph2(nodes_num, data='tree_graph')
-    coordinates = pd.read_csv('best_embedding', header=None)
+
+    coordinates_eukl = pd.read_csv('best_embedding', header=None, skiprows=[nodes_num+1])
+    coordinates_hyp = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])
 
     print(bfs(graph, 43, 11))
-    print(greedy_routing(graph, coordinates, 43, 11))
+    print(greedy_routing(graph, coordinates_eukl, 43, 11, eukl_dist))
 
     # draw2(graph, 0, coordinates)
