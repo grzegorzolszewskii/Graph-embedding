@@ -2,7 +2,7 @@ import pandas as pd
 import random
 
 
-def load_graph2(nodes_num, data):
+def load_graph(nodes_num, data):
     edges_set = {i: set() for i in range(nodes_num)}
     edges_pd = pd.read_csv(data, header=None, delimiter=" ")
 

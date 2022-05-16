@@ -1,9 +1,9 @@
-from graph_import import load_graph2
+from graph_import import load_graph
 from model import Model
 from manifolds import Manifold
 import torch as th
 from train_function import train
-from draw_by_weights import draw2
+from draw_euclidean import draw
 import pandas as pd
 from bfs import bfs
 from acosh import acosh
@@ -76,7 +76,7 @@ def greedy_routing(graph, coordinates, a, b, dist):
 
 if __name__ == "__main__":
     nodes_num = 46
-    graph = load_graph2(nodes_num, data='tree_graph')
+    graph = load_graph(nodes_num, data='tree_graph')
 
     coordinates_eukl = pd.read_csv('best_embedding', header=None, skiprows=[nodes_num+1])
     coordinates_hyp = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])

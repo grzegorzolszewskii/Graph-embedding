@@ -135,6 +135,7 @@ class Manifold:
         else:
             out.index_copy_(0, ix, vnew)
 
+
 class LorentzDot(Function):
     @staticmethod
     def forward(ctx, u, v):

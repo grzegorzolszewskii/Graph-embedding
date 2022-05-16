@@ -3,11 +3,17 @@ from model import Model
 from manifolds import Manifold
 import torch as th
 from train_function import train
-from graph_import import load_graph2
+from graph_import import load_graph
 import pandas as pd
 
 
-def draw2(graph, v, coordinates):
+def to_poincare_ball(coordinates):
+    x = coordinates.clone()
+    d = x.size(-1) - 1
+    return x.narrow(-1, 1, d) / (x.narrow(-1, 0, 1) + 1)
+
+
+def draw(graph, v, coordinates):
     v_coords = (coordinates[0][v], coordinates[1][v])
     X_connected = []
     Y_connected = []
@@ -35,9 +41,9 @@ def draw2(graph, v, coordinates):
 
 if __name__ == '__main__':
     nodes_num = 46
-    graph = load_graph2(nodes_num, data='tree_graph')
+    graph = load_graph(nodes_num, data='tree_graph')
     coordinates = pd.read_csv('good_embedding_dim2', header=None, skiprows=[nodes_num+1])
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
     print(coordinates)
-    draw2(graph, 0, coordinates)
+    draw(graph, 0, coordinates)

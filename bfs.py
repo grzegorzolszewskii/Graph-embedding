@@ -1,5 +1,5 @@
 # bfs ze strony https://onestepcode.com/graph-shortest-path-python/?utm_source=rss&utm_medium=rss&utm_campaign=graph-shortest-path-python
-from graph_import import load_graph2
+from graph_import import load_graph
 
 
 def bfs(graph, node1, node2):
