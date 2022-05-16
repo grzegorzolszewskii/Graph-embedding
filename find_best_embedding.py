@@ -1,9 +1,9 @@
 import torch as th
-import random as rand
 from graph_import import load_graph
 from manifolds import Manifold
 from model import Model
 from train_function import train
+from rsgd import RiemannianSGD
 
 
 def find_best_emb(graph, manifold, dims, lrs, epochs, loops):
@@ -13,7 +13,12 @@ def find_best_emb(graph, manifold, dims, lrs, epochs, loops):
             for l in lrs:
                 for e in epochs:
                     model = Model(manifold, nodes_num, d)
-                    optimizer = th.optim.SGD(model.parameters(), lr=l)
+
+                    if manifold.manifold_type == 'euclidean':
+                        optimizer = th.optim.SGD(model.parameters(), lr=l)
+                    if manifold.manifold_type == 'lorentz':
+                        optimizer = RiemannianSGD(model.optim_params(), lr=l)
+
                     loss_list, weights = train(graph, model, optimizer, epochs=e, max_loss=3.5)
                     loss_with_params[(min(filter(lambda x: x > 0, loss_list)))] = (manifold, d, l, e, loop, weights)
 
@@ -34,11 +39,11 @@ if __name__ == '__main__':
     epochs = [300]
     loops = 1
 
-    loss, params = find_best_emb(graph, manifold_euclidean, dims_euclidean, lrs, epochs, loops)
+    loss, params = find_best_emb(graph, manifold_lorentz, dims_lorentz, lrs, epochs, loops)
     dim = params[1]
     coordinates = params[5]
 
-    if loss < 4:
+    if loss < 8:
         with open('ok_embedding', 'w') as file:
             for i in range(len(graph)):
                 for j in range(dim):
