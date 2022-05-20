@@ -8,9 +8,11 @@ import pandas as pd
 
 
 def to_poincare_ball(coordinates):
-    x = coordinates.clone()
+    torch_tensor = th.tensor(coordinates.values)    # zamiana pd.df na th.tensor
+    x = torch_tensor.clone()
     d = x.size(-1) - 1
-    return x.narrow(-1, 1, d) / (x.narrow(-1, 0, 1) + 1)
+    narrowed = x.narrow(-1, 1, d) / (x.narrow(-1, 0, 1) + 1)
+    return pd.DataFrame(narrowed.numpy())           # zamiana th.tensor na pd.df
 
 
 def draw(graph, v, coordinates):
@@ -42,8 +44,9 @@ def draw(graph, v, coordinates):
 if __name__ == '__main__':
     nodes_num = 46
     graph = load_graph(nodes_num, data='tree_graph')
-    coordinates = pd.read_csv('good_embedding_dim2', header=None, skiprows=[nodes_num+1])
+    coordinates = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
     print(coordinates)
-    draw(graph, 0, coordinates)
+    print(to_poincare_ball(coordinates))
+    draw(graph, 0, to_poincare_ball(coordinates))
