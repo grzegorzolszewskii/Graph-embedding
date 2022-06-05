@@ -22,9 +22,9 @@ def gr_success_rate(graph, coordinates, dist):
 if __name__ == '__main__':
     nodes_num = 46
     graph = load_graph(nodes_num, 'tree_graph')
-    coordinates_eukl = pd.read_csv('best_embedding', header=None, skiprows=[nodes_num+1])
+    coordinates_eukl = pd.read_csv('eucl_2d', header=None, skiprows=[nodes_num+1])
     print(gr_success_rate(graph, coordinates_eukl, eukl_dist))
     print("--------------------------------------------------")
 
-    coordinates_hyp = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])
+    coordinates_hyp = pd.read_csv('hyp_3d', header=None, skiprows=[nodes_num+1])
     print(gr_success_rate(graph, coordinates_hyp, hyp_dist))

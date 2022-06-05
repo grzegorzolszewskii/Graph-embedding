@@ -22,7 +22,7 @@ class Model(Module):
         return dist.squeeze(-1)
 
     def loss(self, inp, target, **kwargs):
-        return fun.cross_entropy(inp.neg(), target)
+        return fun.cross_entropy(-15*inp, target)
 
     def optim_params(self):
         return [{

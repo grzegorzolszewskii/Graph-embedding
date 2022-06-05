@@ -7,6 +7,7 @@ from math import acosh
 def eukl_dist(p1, p2):
     if len(p1) != len(p2):
         raise ValueError("Wektory maja rozne wymiary!")
+
     d = 0
     for i in range(len(p1)):
         d += (p1[i] - p2[i])**2
@@ -14,9 +15,12 @@ def eukl_dist(p1, p2):
 
 
 def hyp_dist(p1, p2):
-    if len(p1) != 3 or len(p2) != 3:
-        raise ValueError("Przestrzen hiperboliczna rozpatrujemy dla 3 wymiarow")
-    product = - p1[0] * p2[0] + p1[1] * p2[1] + p1[2] * p2[2]
+    if len(p1) != len(p2):
+        raise ValueError("Wektory maja rozne wymiary!")
+
+    product = - p1[0] * p2[0]
+    for i in range(1, len(p1)):
+        product += p1[i] * p2[i]
     return acosh(-product)
 
 

@@ -35,16 +35,16 @@ if __name__ == '__main__':
     dims_euclidean = [2, 3, 4, 5]
     dims_lorentz = [3]
 
-    lrs = [0.1, 0.3, 0.5, 0.7, 1]
+    lrs = [0.1]
     epochs = [300]
-    loops = 1
+    loops = 5
 
     loss, params = find_best_emb(graph, manifold_lorentz, dims_lorentz, lrs, epochs, loops)
     dim = params[1]
     coordinates = params[5]
 
-    if loss < 8:
-        with open('ok_embedding', 'w') as file:
+    if loss < 50:
+        with open('hyp_3d', 'w') as file:
             for i in range(len(graph)):
                 for j in range(dim):
                     file.write(str(coordinates[i][j].item()))

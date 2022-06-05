@@ -15,13 +15,9 @@ def to_poincare_ball(coordinates):
     return pd.DataFrame(narrowed.numpy())           # zamiana th.tensor na pd.df
 
 
-def draw(graph, v, coordinates):
-    v_coords = (coordinates[0][v], coordinates[1][v])
-    X_connected = []
-    Y_connected = []
-    for w in graph[v]:
-        X_connected.append(coordinates[0][w])
-        Y_connected.append(coordinates[1][w])
+def draw(graph, coordinates, V):
+    VX_coords = [coordinates[0][i] for i in V]
+    VY_coords = [coordinates[1][i] for i in V]
 
     X_all = [coordinates[0][i] for i in range(0, len(graph))]
     Y_all = [coordinates[1][i] for i in range(0, len(graph))]
@@ -34,9 +30,7 @@ def draw(graph, v, coordinates):
                 plt.plot(X_c, Y_c, c='black', linewidth=0.3)
 
     plt.scatter(X_all, Y_all, c='blue')
-    plt.scatter(X_connected, Y_connected, c='green')
-    plt.scatter(v_coords[0], v_coords[1], c='red')
-    plt.legend(["niepolaczone z czerwonym", "polaczone z czerwonym"])
+    plt.scatter(VX_coords, VY_coords, c='red')
 
     plt.show()
 
@@ -44,9 +38,9 @@ def draw(graph, v, coordinates):
 if __name__ == '__main__':
     nodes_num = 46
     graph = load_graph(nodes_num, data='tree_graph')
-    coordinates = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])
+    coordinates = pd.read_csv('hyp_3d', header=None, skiprows=[nodes_num+1])
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
     print(coordinates)
-    print(to_poincare_ball(coordinates))
-    draw(graph, 0, to_poincare_ball(coordinates))
+    #print(to_poincare_ball(coordinates))
+    draw(graph, to_poincare_ball(coordinates), [0, 1, 2, 45])
