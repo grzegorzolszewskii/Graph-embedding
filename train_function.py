@@ -49,7 +49,7 @@ if __name__ == '__main__':
     graph = load_graph(nodes_num, data='tree_graph')
 
     dim = 2
-    lr = 0.5
+    lr = 0.4
     epochs = 300
     eucl = Manifold('euclidean')
     model = Model(eucl, nodes_num, dim)

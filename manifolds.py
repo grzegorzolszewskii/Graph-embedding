@@ -156,3 +156,4 @@ if __name__ == '__main__':
     t1 = th.tensor([1, 2, 3])
     t2 = th.tensor([4, 5, 6])
     print(m.ldot(t1, t2))
+    print(m)

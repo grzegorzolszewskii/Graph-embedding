@@ -28,3 +28,4 @@ if __name__ == '__main__':
 
     coordinates_hyp = pd.read_csv('hyp_3d', header=None, skiprows=[nodes_num+1])
     print(gr_success_rate(graph, coordinates_hyp, hyp_dist))
+    print("?")

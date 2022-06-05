@@ -42,5 +42,5 @@ if __name__ == '__main__':
     # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
 
     print(coordinates)
-    #print(to_poincare_ball(coordinates))
+    print(to_poincare_ball(coordinates))
     draw(graph, to_poincare_ball(coordinates), [0, 1, 2, 45])

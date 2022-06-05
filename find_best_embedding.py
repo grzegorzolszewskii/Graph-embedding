@@ -33,7 +33,7 @@ if __name__ == '__main__':
     manifold_lorentz = Manifold('lorentz')
 
     dims_euclidean = [2, 3, 4, 5]
-    dims_lorentz = [3]
+    dims_lorentz = [3, 4]
 
     lrs = [0.1]
     epochs = [300]
