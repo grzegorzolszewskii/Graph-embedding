@@ -5,11 +5,12 @@ import torch as th
 
 
 class Model(Module):
-    def __init__(self, manifold, n, dim, sparse=False):
+    def __init__(self, manifold, n, dim, alpha, sparse=False):
         super().__init__()
         self.manifold = manifold
         self.n = n
         self.dim = dim
+        self.alpha = alpha
         self.model = Embedding(n, dim, sparse=sparse)
         if self.manifold.manifold_type == 'lorentz':
             self.manifold.init_weights(self.model)
@@ -22,7 +23,7 @@ class Model(Module):
         return dist.squeeze(-1)
 
     def loss(self, inp, target, **kwargs):
-        return fun.cross_entropy(-10*inp, target)
+        return fun.cross_entropy(-self.alpha*inp, target)
 
     def optim_params(self):
         return [{
