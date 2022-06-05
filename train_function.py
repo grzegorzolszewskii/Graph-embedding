@@ -24,6 +24,9 @@ def train(graph, model, optimizer, epochs=50, max_loss=3.5):
                     while inputs[i, j].item() in graph[node]:
                         inputs[i, j] = rand.randint(0, nodes_num-1)
 
+            if epoch < 50:
+                optimizer.lr = 0.001
+
             optimizer.zero_grad()       # za kazdym razem chcemy nowy gradient
             preds = model(inputs)
             target = th.zeros(10).long()
@@ -52,7 +55,7 @@ if __name__ == '__main__':
     lr = 0.4
     epochs = 300
     eucl = Manifold('euclidean')
-    model = Model(eucl, nodes_num, dim)
+    model = Model(eucl, nodes_num, dim, alpha=1)
     optimizer = th.optim.SGD(model.parameters(), lr=lr)  # dla prz euklidesowej
     # optimizer = RiemannianSGD(model.optim_params(), lr=lr)  # dla lorentza
 
