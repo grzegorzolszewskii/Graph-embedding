@@ -1,9 +1,6 @@
-import torch as th
 from graph_import import load_graph
 from manifolds import Manifold
-from model import Model
-from train_function import train
-from rsgd import RiemannianSGD
+from embed import embed
 
 
 def find_best_emb(graph, manifold, dims, lrs, epochs, alpha, loops, max_loss):
@@ -13,15 +10,8 @@ def find_best_emb(graph, manifold, dims, lrs, epochs, alpha, loops, max_loss):
             for l in lrs:
                 for e in epochs:
                     for a in alpha:
-                        model = Model(manifold, nodes_num, d, a)
+                        loss, weights = embed(graph, manifold, d, l, e, a, max_loss)
 
-                        if manifold.manifold_type == 'euclidean':
-                            optimizer = th.optim.SGD(model.parameters(), lr=l)
-                        if manifold.manifold_type == 'lorentz':
-                            optimizer = RiemannianSGD(model.optim_params(), lr=l)
-
-                        loss, weights = train(graph, model, optimizer, epochs=e,
-                                              max_loss=max_loss)
                         print(loss, l, a)
                         if loss < min_loss:
                             min_loss = loss
@@ -38,21 +28,23 @@ if __name__ == '__main__':
     manifold_euclidean = Manifold('euclidean')
     manifold_lorentz = Manifold('lorentz')
 
-    dims_euclidean = [2]
+    dims_euclidean = [6]
     dims_lorentz = [4, 5, 6]
 
-    lrs = [0.01, 0.05, 0.09, 0.3, 0.7, 1, 1.2]
+    lrs = [0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.25]
+    # lrs = [0.07, 0.08, 0.09]
     epochs = [300]
-    loops = 7
-    alphas = [1, 5, 10, 15]
+    loops = 3
+    alphas = [1, 3, 5, 7, 10, 12, 15]
+    # alphas = [6, 7, 8]
 
     loss, coordinates, params = find_best_emb(graph, manifold_euclidean, dims_euclidean,
-                                              lrs, epochs, alphas, loops, max_loss=5)
+                                              lrs, epochs, alphas, loops, max_loss=3.74)
     dim = params[1]
     print(loss, params)
 
-    if loss < 5:
-        with open('test_file', 'w') as file:
+    if loss < 3.74:
+        with open('eucl_6d', 'w') as file:
             for i in range(len(graph)):
                 for j in range(dim):
                     file.write(str(coordinates[i][j].item()))

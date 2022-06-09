@@ -1,3 +1,4 @@
+# czesc kodu z repozytorium https://github.com/facebookresearch/poincare-embeddings
 import torch as th
 import numpy as np
 from torch.autograd import Function
