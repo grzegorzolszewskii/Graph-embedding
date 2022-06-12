@@ -4,6 +4,9 @@ import torch.nn.functional as fun
 import torch as th
 
 
+th.set_default_tensor_type('torch.DoubleTensor')
+
+
 class Model(Module):
     def __init__(self, manifold, n, dim, alpha, sparse=False):
         super().__init__()

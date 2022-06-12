@@ -16,8 +16,9 @@ def to_poincare_ball(coordinates):
 
 
 def draw(graph, coordinates, V):
-    VX_coords = [coordinates[0][i] for i in V]
-    VY_coords = [coordinates[1][i] for i in V]
+    if V:
+        VX_coords = [coordinates[0][i] for i in V]
+        VY_coords = [coordinates[1][i] for i in V]
 
     X_all = [coordinates[0][i] for i in range(0, len(graph))]
     Y_all = [coordinates[1][i] for i in range(0, len(graph))]
@@ -30,7 +31,8 @@ def draw(graph, coordinates, V):
                 plt.plot(X_c, Y_c, c='black', linewidth=0.3)
 
     plt.scatter(X_all, Y_all, c='blue')
-    plt.scatter(VX_coords, VY_coords, c='red')
+    if V:
+        plt.scatter(VX_coords, VY_coords, c='red')
 
     plt.show()
 
@@ -43,4 +45,4 @@ if __name__ == '__main__':
 
     print(coordinates)
     print(to_poincare_ball(coordinates))
-    draw(graph, to_poincare_ball(coordinates), [0, 1, 2, 45])
+    draw(graph, to_poincare_ball(coordinates), [0])
