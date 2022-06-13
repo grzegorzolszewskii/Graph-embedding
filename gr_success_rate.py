@@ -12,17 +12,20 @@ random.seed(1)
 def gr_success_rate(graph, coordinates, dist, pairs):
     success = 0
     for pair in pairs:
-        if bfs(graph, pair[0], pair[1]) == greedy_routing(graph, coordinates, pair[0], pair[1], dist):
-            success += 1
-        else:
-            print(bfs(graph, pair[0], pair[1]), greedy_routing(graph, coordinates, pair[0], pair[1], dist))
+        bfs_path = bfs(graph, pair[0], pair[1])
+        gr_path = greedy_routing(graph, coordinates, pair[0], pair[1], dist)
+
+        if gr_path:
+            if bfs_path == gr_path or len(bfs_path) == len(gr_path):    # moga byc rozne najkrotsze sciezki
+                success += 1
+
     return success / len(pairs)
 
 
 if __name__ == '__main__':
-    nodes_num = 333
-    graph = load_graph(nodes_num, 'facebook_graph', delimiter=' ')
-    coordinates = pd.read_csv('single_embed', header=None, skiprows=[nodes_num + 1])
+    nodes_num = 1180
+    graph = load_graph(nodes_num, 'mammals_graph.csv', delimiter=',')
+    coordinates = pd.read_csv('eucl_50d', header=None, skiprows=[nodes_num + 1])
 
     pairs_num = 1000
     pairs = [(0, 0) for i in range(pairs_num)]
