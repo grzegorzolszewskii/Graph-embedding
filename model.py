@@ -8,7 +8,7 @@ th.set_default_tensor_type('torch.DoubleTensor')
 
 
 class Model(Module):
-    def __init__(self, manifold, n, dim, alpha, sparse=False):
+    def __init__(self, manifold, n, dim, alpha=1, sparse=False):
         super().__init__()
         self.manifold = manifold
         self.n = n

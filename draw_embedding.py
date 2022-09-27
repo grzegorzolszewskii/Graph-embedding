@@ -15,7 +15,7 @@ def to_poincare_ball(coordinates):
     return pd.DataFrame(narrowed.numpy())           # zamiana th.tensor na pd.df
 
 
-def draw(graph, coordinates, V):
+def draw(graph, coordinates, V=None):
     if V:
         VX_coords = [coordinates[0][i] for i in V]
         VY_coords = [coordinates[1][i] for i in V]
@@ -35,14 +35,3 @@ def draw(graph, coordinates, V):
         plt.scatter(VX_coords, VY_coords, c='red')
 
     plt.show()
-
-
-if __name__ == '__main__':
-    nodes_num = 46
-    graph = load_graph(nodes_num, data='tree_graph')
-    coordinates = pd.read_csv('hyp_3d', header=None, skiprows=[nodes_num+1])
-    # W PD.DF INDEKSOWANIE JEST ODWROTNE !!!
-
-    print(coordinates)
-    print(to_poincare_ball(coordinates))
-    draw(graph, to_poincare_ball(coordinates), [0])

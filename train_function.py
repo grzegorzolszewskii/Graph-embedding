@@ -6,7 +6,7 @@ from model import Model
 from rsgd import RiemannianSGD
 
 
-def train(graph, model, optimizer, epochs=50, max_loss=2.5, m_rows=10, m_cols=52):
+def train(graph, model, optimizer, epochs=200, max_loss=3.5, m_rows=10, m_cols=52):
     nodes_num = len(graph)
     loss_list = [0 for i in range(epochs)]
 

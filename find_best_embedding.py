@@ -32,11 +32,9 @@ if __name__ == '__main__':
     dims_lorentz = [4, 5, 6]
 
     lrs = [0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.25]
-    # lrs = [0.07, 0.08, 0.09]
     epochs = [300]
     loops = 3
     alphas = [1, 3, 5, 7, 10, 12, 15]
-    # alphas = [6, 7, 8]
 
     loss, coordinates, params = find_best_emb(graph, manifold_euclidean, dims_euclidean,
                                               lrs, epochs, alphas, loops, max_loss=3.74)
