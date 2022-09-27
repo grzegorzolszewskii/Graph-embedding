@@ -18,8 +18,8 @@ class Model(Module):
         if self.manifold.manifold_type == 'lorentz':
             self.manifold.init_weights(self.model)
 
-    def forward(self, inputs):      # z inputs zrobi preds - z macierzy 10x52 zrobi sie 10x52xdim
-        e = self.model(inputs)      # macierz 10x52xdim, e to preds z pliku embed - tu wykonuje sie zanurzenie
+    def forward(self, inputs):                  # z inputs zrobi preds - z macierzy 10x52 zrobi sie 10x52xdim
+        e = self.model(inputs)                  # macierz 10x52xdim, e to preds z pliku embed - wykonanie zanurzenia
         o = e.narrow(1, 1, e.size(1) - 1)       # macierz e bez 1 kolumny (10x51xdim)
         s = e.narrow(1, 0, 1).expand_as(o)      # macierz 10x51xdim - wiersz to powt. sie 1 kolumna z e
         dist = self.manifold.distance(s, o)

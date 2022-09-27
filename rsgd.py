@@ -2,13 +2,7 @@ from torch.optim.optimizer import Optimizer, required
 
 
 class RiemannianSGD(Optimizer):
-    r"""Riemannian stochastic gradient descent.
-    Args:
-        rgrad (Function): Function to compute the Riemannian gradient
-           from the Euclidean gradient
-        retraction (Function): Function to update the retraction
-           of the Riemannian gradient
-    """
+    # gradient w przestrzeni hiperbolicznej - Riemannowski SGD
 
     def __init__(
             self,
@@ -25,10 +19,6 @@ class RiemannianSGD(Optimizer):
         super(RiemannianSGD, self).__init__(params, defaults)
 
     def step(self, lr=None, counts=None, **kwargs):
-        """Performs a single optimization step.
-        Arguments:
-            lr (float, optional): learning rate for the current update.
-        """
         loss = None
 
         for group in self.param_groups:

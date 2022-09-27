@@ -36,7 +36,7 @@ class Manifold:
         return th.sum(uv, dim=-1, keepdim=keepdim)
 
     def normalize(self, w):
-        """Normalize vector such that it is located on the hyperboloid"""
+        # w przestrzeni hiperbolicznej wektor powinien znajdowac sie na hiperboloidzie
         d = w.size(-1) - 1
         narrowed = w.narrow(-1, 1, d)
         if self.max_norm:
@@ -57,7 +57,7 @@ class Manifold:
         return w
 
     def rgrad(self, p, d_p):
-        """Riemannian gradient for hyperboloid"""
+        # gradient riemannowski
         if d_p.is_sparse:
             u = d_p._values()
             x = p.index_select(0, d_p._indices().squeeze())
@@ -69,16 +69,10 @@ class Manifold:
         return d_p
 
     def expm(self, p, d_p, lr=None, out=None, normalize=True):
-        """Exponential map for hyperboloid"""
         if out is None:
             out = p
         if d_p.is_sparse:
             ix, d_val = d_p._indices().squeeze(), d_p._values()
-            # This pulls `ix` out of the original embedding table, which could
-            # be in a corrupted state.  normalize it to fix it back to the
-            # surface of the hyperboloid...
-            # TODO: we should only do the normalize if we know that we are
-            # training with multiple threads, otherwise this is a bit wasteful
             p_val = self.normalize(p.index_select(0, ix))
             ldv = self.ldot(d_val, d_val, keepdim=True)
             if self.debug:
@@ -109,7 +103,6 @@ class Manifold:
             p.copy_(newp)
 
     def logm(self, x, y):
-        """Logarithmic map on the Lorenz Manifold"""
         xy = th.clamp(self.ldot(x, y).unsqueeze(-1), max=-1)
         v = acosh(-xy, self.eps).div_(
             th.clamp(th.sqrt(xy * xy - 1), min=self._eps)
@@ -117,7 +110,6 @@ class Manifold:
         return self.normalize_tan(x, v)
 
     def ptransp(self, x, y, v, ix=None, out=None):
-        """Parallel transport for hyperboloid"""
         if ix is not None:
             v_ = v
             x_ = x.index_select(0, ix)
