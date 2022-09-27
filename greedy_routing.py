@@ -38,9 +38,9 @@ def greedy_routing(graph, coordinates, a, b, dist):
     min_v = None
 
     while True:
-        v_connected_coords = {i: [0 for j in range(dim+1)] for i in graph[v]}  # 2 wspolrzedne oraz odleglosc od b
+        v_connected_coords = {i: [0 for j in range(dim+1)] for i in graph[v]}
 
-        for w in v_connected_coords:  # ustalamy koordynaty polaczonych z v
+        for w in v_connected_coords:  # zapisuje wspolrzedne polaczonych z v
             tmp_coords = [float(coordinates[i][w]) for i in range(dim)]
 
             if w == b:
@@ -51,30 +51,18 @@ def greedy_routing(graph, coordinates, a, b, dist):
                 v_connected_coords[w][i] = float(coordinates[i][w])
                 v_connected_coords[w][dim] = dist(tmp_coords, b_coords)
 
-        min_dist = 1000
-        if prev == v:   # jezeli sie blokuje to zwracam path
+        min_dist = 10000
+        if prev == v:   # jezeli sie blokuje - zwracam path
             return [path[i][0] for i in range(len(path)-1)]
 
         if prev is not None:
-            v_connected_coords[prev][dim] = min_dist  # ustalamy poprzednikowi duzy dystans, aby gr nie zawracal
+            v_connected_coords[prev][dim] = min_dist  # ustalam poprzednikowi duzy dystans, aby algorytm nie zawracal
 
-        for w in v_connected_coords:  # szuakmy ktory w polaczony z v ma najmniejsza odleglosc do docelowego
+        for w in v_connected_coords:
             if min_dist > v_connected_coords[w][dim] > 0:
                 min_dist = v_connected_coords[w][dim]
                 min_v = w
 
         path.append((min_v, min_dist))
-
-        # przejscie - zmieniam v na kolejny wierzcholek
-        # print(v_connected_coords)
-        # print("ide z", v, "do ", min_v)
         prev = v
         v = min_v
-
-
-if __name__ == "__main__":
-    nodes_num = 46
-    graph = load_graph(nodes_num, data='tree_graph')
-
-    coordinates_eukl = pd.read_csv('best_embedding', header=None, skiprows=[nodes_num+1])
-    coordinates_hyp = pd.read_csv('hyperbolic_embedding', header=None, skiprows=[nodes_num+1])
