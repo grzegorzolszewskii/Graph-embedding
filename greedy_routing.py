@@ -6,7 +6,7 @@ from math import acosh
 
 def eukl_dist(p1, p2):
     if len(p1) != len(p2):
-        raise ValueError("Wektory maja rozne wymiary!")
+        raise ValueError("Different dimensions")
 
     d = 0
     for i in range(len(p1)):
@@ -16,7 +16,7 @@ def eukl_dist(p1, p2):
 
 def hyp_dist(p1, p2):
     if len(p1) != len(p2):
-        raise ValueError("Wektory maja rozne wymiary!")
+        raise ValueError("Different dimensions")
 
     product = - p1[0] * p2[0]
     for i in range(1, len(p1)):
@@ -40,7 +40,7 @@ def greedy_routing(graph, coordinates, a, b, dist):
     while True:
         v_connected_coords = {i: [0 for j in range(dim+1)] for i in graph[v]}
 
-        for w in v_connected_coords:  # zapisuje wspolrzedne polaczonych z v
+        for w in v_connected_coords:  # saving coordinates of the vertices that are connected to v
             tmp_coords = [float(coordinates[i][w]) for i in range(dim)]
 
             if w == b:
@@ -52,11 +52,11 @@ def greedy_routing(graph, coordinates, a, b, dist):
                 v_connected_coords[w][dim] = dist(tmp_coords, b_coords)
 
         min_dist = 10000
-        if prev == v:   # jezeli sie blokuje - zwracam path
+        if prev == v:   # if it glitches - return path
             return [path[i][0] for i in range(len(path)-1)]
 
         if prev is not None:
-            v_connected_coords[prev][dim] = min_dist  # ustalam poprzednikowi duzy dystans, aby algorytm nie zawracal
+            v_connected_coords[prev][dim] = min_dist  # big distance for prev - algorithm does not turn back
 
         for w in v_connected_coords:
             if min_dist > v_connected_coords[w][dim] > 0:

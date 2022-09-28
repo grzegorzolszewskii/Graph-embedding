@@ -1,18 +1,14 @@
 import matplotlib.pyplot as plt
-from model import Model
-from manifolds import Manifold
 import torch as th
-from train_function import train
-from graph_import import load_graph
 import pandas as pd
 
 
 def to_poincare_ball(coordinates):
-    torch_tensor = th.tensor(coordinates.values)    # zamiana pd.df na th.tensor
+    torch_tensor = th.tensor(coordinates.values)    # pd.df to th.tensor
     x = torch_tensor.clone()
     d = x.size(-1) - 1
     narrowed = x.narrow(-1, 1, d) / (x.narrow(-1, 0, 1) + 1)
-    return pd.DataFrame(narrowed.numpy())           # zamiana th.tensor na pd.df
+    return pd.DataFrame(narrowed.numpy())           # th.tensor to pd.df
 
 
 def draw(graph, coordinates, V=None):

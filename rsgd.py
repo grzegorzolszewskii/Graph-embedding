@@ -1,8 +1,8 @@
 from torch.optim.optimizer import Optimizer, required
-
+# part of the code from https://github.com/facebookresearch/poincare-embeddings
 
 class RiemannianSGD(Optimizer):
-    # gradient w przestrzeni hiperbolicznej - Riemannowski SGD
+    # Riemannian SGD
 
     def __init__(
             self,
@@ -30,7 +30,7 @@ class RiemannianSGD(Optimizer):
                 if p.grad is None:
                     continue
                 d_p = p.grad.data
-                # make sure we have no duplicates in sparse tensor
+
                 if d_p.is_sparse:
                     d_p = d_p.coalesce()
                 d_p = rgrad(p.data, d_p)

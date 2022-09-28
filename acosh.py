@@ -1,6 +1,7 @@
 import torch as th
 from torch.autograd import Function
 
+# acosh function is needed only for hyperbolic space calculations
 
 class Acosh(Function):
     @staticmethod

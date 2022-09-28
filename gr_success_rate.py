@@ -8,20 +8,18 @@ import argparse
 
 random.seed(1)
 
-parser = argparse.ArgumentParser(description="Wspolczynnik sukcesu greedy routingu")
-parser.add_argument('-g', '--graph', type=str, required=True, help='zanurzany graf')
-parser.add_argument('-gs', '--graph_size', type=int, required=True, help='rozmiar grafu')
-parser.add_argument('-eg', '--embedded_graph', type=str, required=True, help='wspolrzedne wierzcholkow zanurzonego '
-                                                                             'grafu')
-parser.add_argument('-m', '--manifold', type=str, help='przestrzen metryczna w ktora zanurzony jest graf')
-parser.add_argument('-p', '--pairs_num', type=int, help='liczba par wierzcholkow na ktorych sprawdzana jest poprawnosc'
-                                                        'greedy routingu')
+parser = argparse.ArgumentParser(description="Greedy routing success rate")
+parser.add_argument('-g', '--graph', type=str, required=True, help='graph')
+parser.add_argument('-gs', '--graph_size', type=int, required=True, help='graph size')
+parser.add_argument('-eg', '--embedded_graph', type=str, required=True, help='coordinates of the embedded graph '
+                                                                             'vertices')
+parser.add_argument('-m', '--manifold', type=str, help='metric space')
+parser.add_argument('-p', '--pairs_num', type=int, help='how many vertices pairs for checking greedy routing'
+                                                        'success rate')
 args = parser.parse_args()
 
 
-# funkcja sprawdza w jaki sposob uzyskane najkrotsze sciezki po zanurzeniu za pomoca greedy routingu pokrywaja sie
-# z najkrotszymi sciezkami grafu przez zanurzeniem, ktore szukane byly algorytmem BFS
-
+# are the greedy routing shortest paths the same as the BFS shortest paths?
 
 def gr_success_rate(graph, coordinates, dist, pairs_num):
     nodes_num = len(graph)
@@ -46,10 +44,6 @@ if __name__ == '__main__':
     coordinates = pd.read_csv(args.embedded_graph, header=None, skiprows=[args.graph_size + 1])
     graph = load_graph(args.graph_size, args.graph)
     if args.manifold == 'euclidean':
-        print("Wspolczynnik sukcesu greedy routingu dla danego zanurzenia wynosi: ", gr_success_rate(graph, coordinates,
-                                                                                                     eukl_dist,
-                                                                                                     args.pairs_num))
+        print("Greedy routing success rate: ", gr_success_rate(graph, coordinates, eukl_dist, args.pairs_num))
     if args.manifold == 'lorentz':
-        print("Wspolczynnik sukcesu greedy routingu dla danego zanurzenia wynosi: ", gr_success_rate(graph, coordinates,
-                                                                                                     hyp_dist,
-                                                                                                     args.pairs_num))
+        print("Greedy routing success rate: ", gr_success_rate(graph, coordinates, hyp_dist, args.pairs_num))

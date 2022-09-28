@@ -14,12 +14,12 @@ def load_graph(nodes_num, data):
     for num1 in edges_set:
         for num2 in edges_set:
             if num2 in edges_set[num1] and num1 not in edges_set[num2]:
-                raise ValueError("Blad w danych")
+                raise ValueError("Uncorrect graph data")
 
     # usuwam zbiory puste
     for j in list(edges_set):
         if edges_set[j] == set():
-            print("Ucinam niepolaczony wierzch nr: ", j)
+            print("Cutting vertex with no connections: ", j)
             edges_set.pop(j)
 
     return edges_set

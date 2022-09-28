@@ -21,11 +21,11 @@ def find_best_emb(graph, manifold, dims, lrs, epochs, alpha, loops, max_loss):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Szukanie najlepszego zanurzenia dla roznych parametrow")
-    parser.add_argument('-g', '--graph', type=str, required=True, help='zanurzany graf')
-    parser.add_argument('-gs', '--graph_size', type=int, required=True, help='rozmiar grafu')
-    parser.add_argument('-m', '--manifold', type=str, required=True, help='przestrzen metryczna')
-    parser.add_argument('-loss', '--max_loss', type=float, help='maksymalna wartosc funkcji kosztu')
+    parser = argparse.ArgumentParser(description="Finding best embedding for different parameters")
+    parser.add_argument('-g', '--graph', type=str, required=True, help='graph')
+    parser.add_argument('-gs', '--graph_size', type=int, required=True, help='graph size')
+    parser.add_argument('-m', '--manifold', type=str, required=True, help='metric space')
+    parser.add_argument('-loss', '--max_loss', type=float, help='maximum loss function value')
     args = parser.parse_args()
 
     dims = [4, 5, 6]

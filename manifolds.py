@@ -1,4 +1,4 @@
-# czesc kodu z repozytorium https://github.com/facebookresearch/poincare-embeddings
+# part of the code from https://github.com/facebookresearch/poincare-embeddings
 import torch as th
 import numpy as np
 from torch.autograd import Function
@@ -30,20 +30,18 @@ class Manifold:
             return acosh(d, self._eps)
 
     @staticmethod
-    def ldot(u, v, keepdim=False):  # iloczyn skalarny w przestrzeni Lorentza
+    def ldot(u, v, keepdim=False):      # Lorentz manifold inner product
         uv = u * v
         uv.narrow(-1, 0, 1).mul_(-1)
         return th.sum(uv, dim=-1, keepdim=keepdim)
 
-    def normalize(self, w):
-        # w przestrzeni hiperbolicznej wektor powinien znajdowac sie na hiperboloidzie
+    def normalize(self, w):             # vector has to be on the hyperboloid
         d = w.size(-1) - 1
         narrowed = w.narrow(-1, 1, d)
         if self.max_norm:
             narrowed.view(-1, d).renorm_(p=2, dim=0, maxnorm=self.max_norm)
 
         if self.K is not None:
-            # Push embeddings outside of `inner_radius`
             w0 = w.narrow(-1, 0, 1).squeeze()
             wnrm = th.sqrt(th.sum(th.pow(narrowed, 2), dim=-1)) / (1 + w0)
             scal = th.ones_like(wnrm)
@@ -57,7 +55,7 @@ class Manifold:
         return w
 
     def rgrad(self, p, d_p):
-        # gradient riemannowski
+        # Riemannian gradient
         if d_p.is_sparse:
             u = d_p._values()
             x = p.index_select(0, d_p._indices().squeeze())
