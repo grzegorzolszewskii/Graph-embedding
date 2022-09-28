@@ -9,7 +9,7 @@ import argparse
 import pandas as pd
 
 
-# dla roznych parametrow otrzymuje loss fun i wspolrzedne - wykonuje jedno zanurzenie
+# dla roznych parametrow otrzymuje wartosc loss i wspolrzedne - wykonuje jedno zanurzenie
 def embed(graph, manifold, dim, lr, epoch, alpha, max_loss):
     model = Model(manifold, len(graph), dim, alpha)
     if manifold.manifold_type == 'euclidean':
